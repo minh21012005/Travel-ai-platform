@@ -1,0 +1,9 @@
+{
+  "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.ruff": "always",
+    "source.organizeImports.ruff": "always"
+  },
+  "python.analysis.typeCheckingMode": "basic"
+}
