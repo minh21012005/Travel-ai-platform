@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 
 from app.api.router import api_router
+from app.shared.config import get_settings
 
 
 def create_app() -> FastAPI:
+    settings = get_settings()
+
     app = FastAPI(
-        title="FastAPI Health Check API",
+        title=settings.app_name,
         version="1.0.0",
     )
 
