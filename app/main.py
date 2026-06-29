@@ -4,8 +4,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.router import api_router
-from app.shared.config import get_settings
-from app.shared.logging import setup_logging
+from app.core.config import get_settings
+from app.core.logging import setup_logging
 
 logger = logging.getLogger(__name__)
 
