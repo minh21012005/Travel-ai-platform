@@ -7,6 +7,7 @@ from app.api.exception_handlers import register_exception_handlers
 from app.api.router import api_router
 from app.core.config import get_settings
 from app.core.logging import setup_logging
+from app.core.middleware import process_time_middleware
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,8 @@ def create_app() -> FastAPI:
         version="0.1.0",
         lifespan=lifespan,
     )
+
+    app.middleware("http")(process_time_middleware)
 
     register_exception_handlers(app)
 
