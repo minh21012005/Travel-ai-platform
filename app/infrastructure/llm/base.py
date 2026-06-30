@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
 
+from .models import LLMRequest, LLMResponse
+
 
 class LLMClient(ABC):
     @abstractmethod
-    async def generate(self, system_prompt: str, user_prompt: str) -> str:
-        """Generate text from an LLM."""
-        raise NotImplementedError
+    async def generate(
+        self,
+        request: LLMRequest,
+    ) -> LLMResponse:
+        pass
