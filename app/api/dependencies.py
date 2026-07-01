@@ -2,6 +2,8 @@ from fastapi import Depends
 
 from app.core.config import Settings, get_settings
 from app.features.ai.service import AIService
+from app.infrastructure.chunking.base import TextChunker
+from app.infrastructure.chunking.recursive import RecursiveTextChunker
 from app.infrastructure.embedding.base import EmbeddingClient
 from app.infrastructure.embedding.gemini import GeminiEmbeddingClient
 from app.infrastructure.llm.base import LLMClient
@@ -16,8 +18,14 @@ def get_embedding_client(settings: Settings = Depends(get_settings)) -> Embeddin
     return GeminiEmbeddingClient(settings=settings)
 
 
+def get_chunker() -> TextChunker:
+    # Use default params (1000, 200) or configure from settings
+    return RecursiveTextChunker()
+
+
 def get_ai_service(
     llm: LLMClient = Depends(get_llm_client),
-    embedding: EmbeddingClient = Depends(get_embedding_client)
+    embedding: EmbeddingClient = Depends(get_embedding_client),
+    chunker: TextChunker = Depends(get_chunker),
 ) -> AIService:
-    return AIService(llm=llm, embedding=embedding)
+    return AIService(llm=llm, embedding=embedding, chunker=chunker)

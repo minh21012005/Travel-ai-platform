@@ -1,3 +1,4 @@
+from app.infrastructure.chunking.base import TextChunker
 from app.infrastructure.embedding.base import EmbeddingClient
 from app.infrastructure.embedding.utils import cosine_similarity
 from app.infrastructure.llm.base import LLMClient
@@ -9,9 +10,11 @@ class AIService:
         self,
         llm: LLMClient,
         embedding: EmbeddingClient,
+        chunker: TextChunker,
     ):
         self.llm = llm
         self.embedding = embedding
+        self.chunker = chunker
 
     async def test(self):
 
@@ -28,3 +31,6 @@ class AIService:
         vec1 = await self.embedding.embed_text(text1)
         vec2 = await self.embedding.embed_text(text2)
         return cosine_similarity(vec1, vec2)
+        
+    def chunk_text(self, text: str) -> list[str]:
+        return self.chunker.split(text)

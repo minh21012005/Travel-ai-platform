@@ -34,3 +34,23 @@ async def test_embedding(
         text1=req.text1,
         text2=req.text2
     )
+
+
+class ChunkRequest(BaseModel):
+    text: str
+
+class ChunkResponse(BaseModel):
+    chunks: list[str]
+    count: int
+
+@router.post("/api/v1/ai/test/chunking", response_model=ChunkResponse)
+async def test_chunking(
+    req: ChunkRequest,
+    ai_service: AIService = Depends(get_ai_service),
+) -> ChunkResponse:
+    chunks = ai_service.chunk_text(req.text)
+    
+    return ChunkResponse(
+        chunks=chunks,
+        count=len(chunks)
+    )
