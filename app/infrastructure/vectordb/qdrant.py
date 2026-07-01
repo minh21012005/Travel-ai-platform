@@ -52,3 +52,31 @@ class QdrantDBClient(VectorDBClient):
             collection_name=collection_name,
             points=points,
         )
+
+    async def search_vectors(
+        self,
+        collection_name: str,
+        query_vector: list[float],
+        limit: int = 5,
+        filter_metadata: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
+        
+        # Build Qdrant filter if filter_metadata is provided
+        qdrant_filter = None
+        if filter_metadata:
+            must_conditions: list[models.Condition] = [
+                models.FieldCondition(key=key, match=models.MatchValue(value=value))
+                for key, value in filter_metadata.items()
+            ]
+            qdrant_filter = models.Filter(must=must_conditions)
+
+        search_result = await self.client.query_points(
+            collection_name=collection_name,
+            query=query_vector,
+            limit=limit,
+            query_filter=qdrant_filter,
+            with_payload=True,
+        )
+
+        # Return just the payloads
+        return [hit.payload for hit in search_result.points if hit.payload]

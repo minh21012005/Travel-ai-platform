@@ -3,6 +3,7 @@ from fastapi import Depends
 from app.core.config import Settings, get_settings
 from app.features.ai.service import AIService
 from app.features.indexing.service import IndexingService
+from app.features.rag.service import RAGService
 from app.infrastructure.chunking.base import TextChunker
 from app.infrastructure.chunking.recursive import RecursiveTextChunker
 from app.infrastructure.embedding.base import EmbeddingClient
@@ -44,3 +45,11 @@ def get_indexing_service(
     vectordb: VectorDBClient = Depends(get_vectordb_client),
 ) -> IndexingService:
     return IndexingService(chunker=chunker, embedding=embedding, vectordb=vectordb)
+
+
+def get_rag_service(
+    embedding: EmbeddingClient = Depends(get_embedding_client),
+    vectordb: VectorDBClient = Depends(get_vectordb_client),
+    llm: LLMClient = Depends(get_llm_client),
+) -> RAGService:
+    return RAGService(embedding=embedding, vectordb=vectordb, llm=llm)
