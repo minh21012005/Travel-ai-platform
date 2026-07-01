@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     google_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     request_timeout: int = 30
+    
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_api_key: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",
